@@ -71,6 +71,16 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
     @Override
     public void update(int id, Employee employee) {
+        try{
+            Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
+
+            // line.replace()
+
+
+
+        }catch (FileNotFoundException f){
+
+        }
 
     }
 
