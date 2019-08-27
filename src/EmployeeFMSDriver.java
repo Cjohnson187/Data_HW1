@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class EmployeeFMSDriver implements EmployeeCRUD {
 
     static final String EMPLOYEE_FILENAME = "employees.csv";
+    static final String prompt = "00";
 
     @Override
     public void create(Employee employee) {
@@ -38,6 +39,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                 e.printStackTrace();
             }
         }
+        System.out.println("employee created");
     }
 
     @Override
@@ -76,8 +78,38 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
     public void delete(int id) {
     }
 
+    public static void promptCreate(String prompt, EmployeeFMSDriver emp){
+        Scanner reader = new Scanner(System.in);
+        if (prompt == "create") {
+
+            String name = "";
+            String department = "";
+            int id = 0;
+
+            System.out.println("WHat is the employees name?");
+            name = reader.nextLine();
+            System.out.println(name);
+            //emp.create
+        }
+    }
+
     public static void main(String[] args) {
-        EmployeeFMSDriver impl = new EmployeeFMSDriver();
+        EmployeeFMSDriver empl = new EmployeeFMSDriver();
+        Employee temp = new Employee(0, "none", "none");
+        Employee employee2 = new Employee(3,"Joeseph", "IT");
+        empl.create(employee2);
+
+        try {
+            temp = empl.read(5);
+            System.out.println(temp.getDepartment());
+
+        }
+        catch(NullPointerException n) {
+            System.out.println("No Employee exists with that ID");
+        }
+        //promptCreate("create", empl);
+
+
 
         // create a menu of options here or hard code some examples
         // to illustrate that your code works!
