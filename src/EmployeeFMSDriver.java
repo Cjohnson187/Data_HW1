@@ -174,35 +174,9 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
     public static void main(String[] args) {
         EmployeeFMSDriver empl = new EmployeeFMSDriver();
-        /*Employee temp = new Employee(0, "none", "none");
-
-        Employee employee1 = new Employee(1,"Carl", "IT");
-        empl.create(employee1);
-
-        Employee employee2 = new Employee(2,"Bob", "sales");
-        empl.create(employee2);
-
-        Employee employee3 = new Employee(3,"john", "accounting");
-        empl.create(employee3);
-
-        empl.delete(2);
-
-        Employee newEmployee3 = new Employee(3,"johnBonjovi", "Music");
-
-         */
-
-        //empl.update(3, newEmployee3);
-
-        //System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee?");
-        //System.out.println("Type -  create or read or update or delete or exit");
-
-        //System.out.println("Would you like to access the database?");
-
         Scanner userInput = new Scanner(System.in);
-        //String choice = userInput.nextLine();
+
         String choice = "";
-
-
 
 
         while(!choice.equals("exit")) {
@@ -227,13 +201,6 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                         String data[] = line.split(",");
                         int key = Integer.parseInt(data[0]);
                         existingIds.add(key);
-/*
-                        if (newId == key) {
-                            newId +=1;
-                            continue;
-                        }
-
- */
                     }
                     for (int i=0; i < existingIds.size(); i++){
                         if(existingIds.contains(newId)){
@@ -253,14 +220,11 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
             }
 
             else if (choice.equals("read")) {
-                //System.out.println("what user id would you like to read");
-                //String readId = userInput.nextLine();
 
                 boolean isInteger = false;
                 while (isInteger == false) {
                     System.out.println("what user id would you like to read");
                     String readId = userInput.nextLine();
-                    //userInput.nextLine();
                     try {
                         int readIdInt = Integer.parseInt(readId);
                         empl.read(readIdInt);
@@ -272,8 +236,6 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                         System.out.println("This is not an integer.");
                         continue;
                     }
-                    //int readIdInt = Integer.parseInt(readId);
-                    //empl.read(readIdInt);
                 }
             }
 
@@ -290,12 +252,6 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
                         System.out.println("What would you like to change employee # " +intIdToUpdate + "'s name to?" );
                         newName = userInput.nextLine();
-                        //try {
-                        //    Thread.sleep(2000);
-                        //}
-                        //catch(InterruptedException e){
-
-                        //}
 
                         System.out.println("What would you like to change employee # " +intIdToUpdate + "'s department to?" );
                         newDept = userInput.nextLine();
@@ -334,6 +290,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
         }
 
         userInput.close();
+        System.exit(0);
 
     }
 }
