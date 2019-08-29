@@ -59,12 +59,16 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                     String dep = data[2];
                     Employee employee = new Employee(id, name, dep);
                     in.close();
+                    if (isNull(employee)){
+                        System.out.println("No employee with that ID.");
+                    }
                     return employee;
                 }
             }
             in.close();
         }
         catch (FileNotFoundException ex) {
+            System.out.println("File not found");
             // ignoring ...}
         }
         return null;
@@ -163,20 +167,10 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
     }
 
-    public static void promptCreate(String prompt, EmployeeFMSDriver emp){
-        Scanner reader = new Scanner(System.in);
-        if (prompt == "create") {
-
-            String name = "";
-            String department = "";
-            int id = 0;
-
-            System.out.println("WHat is the employees name?");
-            name = reader.nextLine();
-            System.out.println(name);
-            //emp.create
-        }
+    private boolean isNull(Object obj) {
+        return obj == null;
     }
+
 
     public static void main(String[] args) {
         EmployeeFMSDriver empl = new EmployeeFMSDriver();
@@ -199,11 +193,17 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
         //empl.update(3, newEmployee3);
 
-        System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee?");
-        System.out.println("Type -  create or read or update or delete or exit");
+        //System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee?");
+        //System.out.println("Type -  create or read or update or delete or exit");
+
+        //System.out.println("Would you like to access the database?");
 
         Scanner userInput = new Scanner(System.in);
-        String choice = userInput.nextLine();
+        //String choice = userInput.nextLine();
+        String choice = "";
+
+
+
 
         while(!choice.equals("exit")) {
             System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee or exit?");
@@ -219,15 +219,28 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
                 try {
                     Scanner inRead = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
+                    ArrayList<Integer> existingIds = new ArrayList<Integer>();
                     while (inRead.hasNextLine()) {
                         String line = inRead.nextLine();
                         if (line.charAt(0) == '#')
                             continue;
                         String data[] = line.split(",");
                         int key = Integer.parseInt(data[0]);
+                        existingIds.add(key);
+/*
                         if (newId == key) {
                             newId +=1;
                             continue;
+                        }
+
+ */
+                    }
+                    for (int i=0; i < existingIds.size(); i++){
+                        if(existingIds.contains(newId)){
+                            newId += 1;
+                        }
+                        else {
+                            break;
                         }
                     }
                     inRead.close();
@@ -247,11 +260,12 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                 while (isInteger == false) {
                     System.out.println("what user id would you like to read");
                     String readId = userInput.nextLine();
+                    //userInput.nextLine();
                     try {
                         int readIdInt = Integer.parseInt(readId);
                         empl.read(readIdInt);
                         isInteger = true;
-                        empl.read(readIdInt);
+                        System.out.println(empl.read(readIdInt));
 
                     }
                     catch(Exception e) {
@@ -272,9 +286,17 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                         String newName = "#";
                         String newDept = "#";
                         int intIdToUpdate = userInput.nextInt();
+                        userInput.nextLine();
 
                         System.out.println("What would you like to change employee # " +intIdToUpdate + "'s name to?" );
                         newName = userInput.nextLine();
+                        //try {
+                        //    Thread.sleep(2000);
+                        //}
+                        //catch(InterruptedException e){
+
+                        //}
+
                         System.out.println("What would you like to change employee # " +intIdToUpdate + "'s department to?" );
                         newDept = userInput.nextLine();
                         Employee employeeToUpdate = new Employee(intIdToUpdate, newName, newDept);
@@ -292,6 +314,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                 System.out.println("What is the id of the employee you want to delete?");
                 try{
                     int idToDelete = userInput.nextInt();
+                    userInput.nextLine();
                     empl.delete(idToDelete);
                 }
                 catch(InputMismatchException e){
