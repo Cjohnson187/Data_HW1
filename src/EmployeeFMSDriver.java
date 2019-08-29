@@ -1,5 +1,6 @@
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class EmployeeFMSDriver implements EmployeeCRUD {
@@ -107,8 +108,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
     @Override
     public void delete(int id) {
 
-        boolean found = false;
-        //Employee tempEmpl = new Employee(0, "#", "#");
+        ArrayList<Employee> newData = new ArrayList<Employee>();
 
         try {
             PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME, true));
@@ -116,20 +116,19 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
             int lineCount = 0;
             while (in.hasNextLine()) {
                 String line = in.nextLine();
-                // ignoring deleted employees
                 if (line.charAt(0) == '#') {
-                    //lineCount += 1; // dnt need it
-                    out.println("#");
                     continue;
                 }
-                String data[] = line.split(",");
-                int idD = Integer.parseInt(data[0]);
-                Employee temp = new Employee(idD, data[1], data[2]);
 
-                if (id == idD) {
-                    out.println();
-                    found = true;
-                    break;
+                String data[] = line.split(",");
+                int idFound = Integer.parseInt(data[0]);
+
+                if (idFound == id){
+                    continue;
+                }
+                else {
+                    Employee temp = new Employee(idFound, data[1], data[2]);
+                    newData.add(temp);
                 }
             }
             in.close();
@@ -138,19 +137,17 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
             System.out.println("Employee does not exists!");
 
         }
+        try{
+            PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME));
 
-        /*
-        if (found)
-            System.out.println("Employee with same id already exists!");
-        else {
-            try {
-                PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME, true));
-                //out.println(employee);
-                out.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            for(int i = 0; i < newData.size(); i++ ) {
+                out.println(newData.get(i));
             }
-        }*/
+
+        }
+        catch(FileNotFoundException ex2) {
+            System.out.println("File not found");
+        }
 
     }
 
@@ -172,9 +169,18 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
     public static void main(String[] args) {
         EmployeeFMSDriver empl = new EmployeeFMSDriver();
         Employee temp = new Employee(0, "none", "none");
-        Employee employee2 = new Employee(1,"carl", "IT");
+
+        Employee employee1 = new Employee(1,"Carl", "IT");
+        empl.create(employee1);
+
+        Employee employee2 = new Employee(2,"Bob", "sales");
         empl.create(employee2);
-        empl.delete(1);
+
+        Employee employee3 = new Employee(3,"john", "accounting");
+        empl.create(employee3);
+
+
+        empl.delete(2);
 
         try {
             temp = empl.read(5);
