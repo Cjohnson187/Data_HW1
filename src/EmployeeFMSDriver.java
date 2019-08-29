@@ -6,7 +6,6 @@ import java.util.Scanner;
 public class EmployeeFMSDriver implements EmployeeCRUD {
 
     static final String EMPLOYEE_FILENAME = "employees.csv";
-    static final String prompt = "00";
 
     @Override
     public void create(Employee employee) {
@@ -114,8 +113,6 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
             System.out.println("File not found");
         }
 
-
-
     }
 
     @Override
@@ -194,10 +191,61 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
         empl.delete(2);
 
-
         Employee newEmployee3 = new Employee(3,"johnBonjovi", "Music");
 
         empl.update(3, newEmployee3);
+
+        System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee?");
+        System.out.println("Type -  create or read or update or delete or exit");
+
+        Scanner userInput = new Scanner(System.in);
+        String choice = userInput.nextLine();
+
+        while(!choice.equals("exit")) {
+            System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee or exit?");
+            System.out.println("Type -  create or read or update or delete or exit");
+            choice = userInput.nextLine();
+
+            if (choice.equals("create")) {
+                System.out.println("What is the employee's name?");
+                String newName = userInput.nextLine();
+                System.out.println("What is the employee's department?");
+                String newDept = userInput.nextLine();
+                int newId = 1;
+
+                try {
+                    Scanner inRead = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
+                    while (inRead.hasNextLine()) {
+                        String line = inRead.nextLine();
+                        if (line.charAt(0) == '#')
+                            continue;
+                        String data[] = line.split(",");
+                        int key = Integer.parseInt(data[0]);
+                        if (newId == key) {
+                            newId +=1;
+                            continue;
+                        }
+                    }
+                    inRead.close();
+                }
+                catch(FileNotFoundException e) {
+                    System.out.println("File not found.");
+                }
+                Employee tempCreateEmployee = new Employee(newId,newName, newDept);
+                empl.create(tempCreateEmployee);
+            }
+
+            else if (choice.equals("read")) {
+
+            }
+
+        }
+
+
+
+
+
+
 
         try {
             temp = empl.read(5);
