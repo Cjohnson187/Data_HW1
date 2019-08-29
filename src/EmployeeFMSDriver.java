@@ -236,7 +236,25 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
             }
 
             else if (choice.equals("read")) {
+                //System.out.println("what user id would you like to read");
+                //String readId = userInput.nextLine();
 
+                boolean isInteger = false;
+                while (isInteger == false) {
+                    System.out.println("what user id would you like to read");
+                    String readId = userInput.nextLine();
+                    try {
+                        int readIdInt = Integer.parseInt(readId);
+                        empl.read(readIdInt);
+                        isInteger = true;
+                    }
+                    catch(Exception e) {
+                        System.out.println("This is not an integer.");
+                        continue;
+                    }
+                    int readIdInt = Integer.parseInt(readId);
+                    empl.read(readIdInt);
+                }
             }
 
         }
