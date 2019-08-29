@@ -72,36 +72,49 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
     @Override
     public void update(int id, Employee employee) {
-        boolean foundUpdate = false;
-        int lineCount = 0;
-        try{
+
+        ArrayList<Employee> newData = new ArrayList<Employee>();
+
+        try {
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
             while (in.hasNextLine()) {
                 String line = in.nextLine();
-                // ignoring deleted employees
                 if (line.charAt(0) == '#') {
-                    lineCount += 1;
                     continue;
-                    }
-                lineCount +=1;
+                }
+
                 String data[] = line.split(",");
-                int idNum = Integer.parseInt(data[0]);
-                if (idNum == employee.getId()) {
-                    foundUpdate = true;
-                    break;
+                int idFound = Integer.parseInt(data[0]);
+
+                if (idFound == id){
+                    newData.add(employee);
+                }
+                else {
+                    Employee temp = new Employee(idFound, data[1], data[2]);
+                    newData.add(temp);
                 }
             }
             in.close();
-
-
-
-            // line.replace()
-
-
-
-        }catch (FileNotFoundException f){
+        }
+        catch (FileNotFoundException ex) {
+            System.out.println("Employee does not exists!");
 
         }
+        try{
+            PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME));
+
+            for(int i = 0; i < newData.size(); i++ ) {
+                out.println(newData.get(i));
+            }
+
+            out.close();
+
+        }
+        catch(FileNotFoundException ex2) {
+            System.out.println("File not found");
+        }
+
+
 
     }
 
@@ -111,9 +124,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
         ArrayList<Employee> newData = new ArrayList<Employee>();
 
         try {
-            PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME, true));
             Scanner in = new Scanner(new FileInputStream(EMPLOYEE_FILENAME));
-            int lineCount = 0;
             while (in.hasNextLine()) {
                 String line = in.nextLine();
                 if (line.charAt(0) == '#') {
@@ -143,6 +154,8 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
             for(int i = 0; i < newData.size(); i++ ) {
                 out.println(newData.get(i));
             }
+
+            out.close();
 
         }
         catch(FileNotFoundException ex2) {
@@ -179,8 +192,12 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
         Employee employee3 = new Employee(3,"john", "accounting");
         empl.create(employee3);
 
-
         empl.delete(2);
+
+
+        Employee newEmployee3 = new Employee(3,"johnBonjovi", "Music");
+
+        empl.update(3, newEmployee3);
 
         try {
             temp = empl.read(5);
@@ -190,8 +207,6 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
         catch(NullPointerException n) {
             System.out.println("No Employee exists with that ID");
         }
-        //promptCreate("create", empl);
-
 
 
         // create a menu of options here or hard code some examples
