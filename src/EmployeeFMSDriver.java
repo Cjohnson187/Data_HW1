@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class EmployeeFMSDriver implements EmployeeCRUD {
@@ -145,6 +146,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
             System.out.println("Employee does not exists!");
 
         }
+
         try{
             PrintStream out = new PrintStream(new FileOutputStream(EMPLOYEE_FILENAME));
 
@@ -178,7 +180,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
     public static void main(String[] args) {
         EmployeeFMSDriver empl = new EmployeeFMSDriver();
-        Employee temp = new Employee(0, "none", "none");
+        /*Employee temp = new Employee(0, "none", "none");
 
         Employee employee1 = new Employee(1,"Carl", "IT");
         empl.create(employee1);
@@ -193,7 +195,9 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
         Employee newEmployee3 = new Employee(3,"johnBonjovi", "Music");
 
-        empl.update(3, newEmployee3);
+         */
+
+        //empl.update(3, newEmployee3);
 
         System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee?");
         System.out.println("Type -  create or read or update or delete or exit");
@@ -203,7 +207,7 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
 
         while(!choice.equals("exit")) {
             System.out.println("Would you like either Create an employee, read an employee id, update an employee or delete an employee or exit?");
-            System.out.println("Type -  create or read or update or delete or exit");
+            System.out.println("Type -  create / read / update / delete / exit");
             choice = userInput.nextLine();
 
             if (choice.equals("create")) {
@@ -247,36 +251,66 @@ public class EmployeeFMSDriver implements EmployeeCRUD {
                         int readIdInt = Integer.parseInt(readId);
                         empl.read(readIdInt);
                         isInteger = true;
+                        empl.read(readIdInt);
+
                     }
                     catch(Exception e) {
                         System.out.println("This is not an integer.");
                         continue;
                     }
-                    int readIdInt = Integer.parseInt(readId);
-                    empl.read(readIdInt);
+                    //int readIdInt = Integer.parseInt(readId);
+                    //empl.read(readIdInt);
                 }
+            }
+
+            else if (choice.equals("update")) {
+                boolean idToUpdateBool = false;
+                while (idToUpdateBool == false) {
+                    System.out.println("What user id would you like to update?");
+
+                    try {
+                        String newName = "#";
+                        String newDept = "#";
+                        int intIdToUpdate = userInput.nextInt();
+
+                        System.out.println("What would you like to change employee # " +intIdToUpdate + "'s name to?" );
+                        newName = userInput.nextLine();
+                        System.out.println("What would you like to change employee # " +intIdToUpdate + "'s department to?" );
+                        newDept = userInput.nextLine();
+                        Employee employeeToUpdate = new Employee(intIdToUpdate, newName, newDept);
+                        empl.update(intIdToUpdate, employeeToUpdate);
+                        idToUpdateBool = true;
+                    }
+                    catch(InputMismatchException e) {
+                        System.out.println("Input Mismatch, try again.");
+                        continue;
+                    }
+                }
+            }
+
+            else if (choice.equals("delete")) {
+                System.out.println("What is the id of the employee you want to delete?");
+                try{
+                    int idToDelete = userInput.nextInt();
+                    empl.delete(idToDelete);
+                }
+                catch(InputMismatchException e){
+                    System.out.println("Please type in an integer.");
+                    continue;
+                }
+
+            }
+            else if (choice.equals("exit")) {
+                break;
+            }
+            else{
+                System.out.println("Could not recognize user Input please try again or type exit to stop the program.");
+                continue;
             }
 
         }
 
-
-
-
-
-
-
-        try {
-            temp = empl.read(5);
-            System.out.println(temp.getDepartment());
-
-        }
-        catch(NullPointerException n) {
-            System.out.println("No Employee exists with that ID");
-        }
-
-
-        // create a menu of options here or hard code some examples
-        // to illustrate that your code works!
+        userInput.close();
 
     }
 }
